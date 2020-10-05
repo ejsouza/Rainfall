@@ -1,0 +1,19 @@
+In level0 we are faced with an executable that running it without argument crash
+	./level0
+		Segmentation fault (core dumped)
+
+running it with any argument I tried gave me an 'No !'
+	./level0 42
+		No !
+
+So lets fire GBD and have a closer look
+	> gdb -q level0
+	> b main
+	> disas main
+		Dump of assembler code for function main:
+	This will shows us the source code in assembly language, we can note that there are 8 function calls
+	and the first called function is atoi, so I deduce that the prgram is probably expectin a number <great>
+0x08048ed9 <+25>:	cmp    eax,0x1a7
+0x08048ede <+30>:	jne    0x8048f58 <main+152>
+	we know by convention that the return of a function will be stored in (eax/rax <32/64-bit>)
+	so if the return from atoi is not eqaul to 0x1a7 (423)
