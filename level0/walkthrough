@@ -1,15 +1,15 @@
 In level0 we are faced with an executable that running it without argument crash
-	./level0
+	$ ./level0
 		Segmentation fault (core dumped)
 
 running it with any argument I tried gave me an 'No !'
-	./level0 42
+	$ ./level0 42
 		No !
 
 So lets fire GBD and have a closer look
-	> gdb -q level0
-	> b main
-	> disas main
+	$ gdb -q level0
+	$ b main
+	$ disas main
 		Dump of assembler code for function main:
 	This will shows us the source code in assembly language, we can note that there are 8 function calls
 	and the first called function is atoi, so I deduce that the prgram is probably expectin a number <great>
@@ -29,4 +29,17 @@ x/i 0x80ee170
 	if we examine the hex value being moved to esp as an string we get:
  x/s 0x80c5348
  	0x80c5348:	 "/bin/sh"
-	right after that there's a call to to strdup
+	right after that there's a call to to strdup, following we can see a call to getegid and  geteuid for getting
+	group and user id, next a call to set those values are made, a little down we see another call to <execv> just after
+	the mov eax, ds:0x80c5348 that contains 0x80c5348:	 "/bin/sh"
+
+	This is exec command will execute a new shell where we can run the command:
+
+$ cat /home/user/level1/.pass
+1fe8a524fa4bec01ca4ea2a869af2a02260d4a7d5fe7e7c24d8617e6dca12d3a
+
+	and we get the flag, Ctrl+D to leave the shell and type:
+$ su level1
+Password: <1fe8a524fa4bec01ca4ea2a869af2a02260d4a7d5fe7e7c24d8617e6dca12d3a>
+RELRO           STACK CANARY      NX            PIE             RPATH      RUNPATH      FILE
+No RELRO        No canary found   NX disabled   No PIE          No RPATH   No RUNPATH   /home/user/level1/level1
