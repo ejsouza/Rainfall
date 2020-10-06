@@ -16,4 +16,17 @@ So lets fire GBD and have a closer look
 0x08048ed9 <+25>:	cmp    eax,0x1a7
 0x08048ede <+30>:	jne    0x8048f58 <main+152>
 	we know by convention that the return of a function will be stored in (eax/rax <32/64-bit>)
-	so if the return from atoi is not eqaul to 0x1a7 (423)
+	in the next instruction we can read if the return from atoi is not eqaul to 0x1a7 (423) jmp to 0x8048f58
+0x08048f58 <+152>:	mov    eax,ds:0x80ee170
+	here is where it will jumb if the number is not equal to 0x1a7 (423)
+	if we  examine this address
+x/i 0x80ee170
+	 0x80ee170 <stderr>:	mov    al,ds:0x40080ee7
+	 we can see the stderr  and that 7 lines below there is the call to fwrite, so it should be the message we get
+	 when we enter other thatn 423.
+	 If we don't jump and check the next instruction right after the jne:
+0x08048ee0 <+32>:	mov    DWORD PTR [esp],0x80c5348
+	if we examine the hex value being moved to esp as an string we get:
+ x/s 0x80c5348
+ 	0x80c5348:	 "/bin/sh"
+	right after that there's a call to to strdup
