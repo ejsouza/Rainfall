@@ -4,8 +4,7 @@
 int			m;
 
 void			v(void) {
-	// 0x080484b6 <+18>:	mov    DWORD PTR [esp+0x4],0x200
-	char		buffer[512];
+	char		buffer[520];
 
 	fgets(buffer, 512, stdin);
 	printf(buffer);
