@@ -27,4 +27,4 @@ the number of bytes that have been written by the function __address__ in the co
 
 Returning to the function `v()`, right after the call to `printf()` a value from *0x804988c* is moved into the register __eax__ and a comparison is
 made:<br> `0x080484df <+59>:	cmp    eax,0x40`<br> if the value in the __address__ `0x080484df` is not equal to *0x40(64)* the program simply jumps to the `leave`
-instruction and the function returns to the next instruction from `main()` that is the `leave` __address__ *0x08048525*.<br>Otherwise if value is equal to *0x40(64)*
+instruction and the function returns to the next instruction from `main()` that is the `leave` __address__ *0x08048525*.<br>Otherwise if value is equal to *0x40(64)* the execution will follow and the parameters to `<fwrite@plt>` will be loaded in the respectives register to print the value contained in the __address__ *0x8048600 ("Wait what?!\n")* right next the string contained in *0x804860d( "/bin/sh")* will be moved into *esp*<br> 0x0804850c <+104>:	mov    DWORD PTR [esp],0x804860d <br> and the function `<system@plt>` will be called<br> `0x08048513 <+111>:	call   0x80483c0 <system@plt>` <br>
