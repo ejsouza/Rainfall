@@ -8,7 +8,7 @@ The `level4` is almost the same as `level3`, a very basic main that calls a func
 0x080484b2 <+11>:	leave
 0x080484b3 <+12>:	ret
 ```
-We will be usding the same strategy from `level3` __*format string exploit*__, bear in mind that this time we will need to set a variable to a very higher value, in `level3` was just *64* while in `level4` the value is `0x1025544 (16930116)` so we will need to modify a bit our strategy, but if I remember well when I coded my own version of `printf()` *(I would have never imagined this project would help me in this way :p)* the `printf()` function has an option for `padding` and that's what we're  gonna use here to generate those extra `16930112` characters *(Yeah I'm not kidding)*, let's start to find the __offset__ for our __address__
+We will be usding the same strategy from `level3` __*format string exploit*__, bear in mind that this time we will need to set a variable to a much higher value, in `level3` was just *64* while in `level4` the value is `0x1025544 (16930116)` so we will need to modify a bit our strategy, but if I remember well when I coded my own version of `printf()` *(I would have never imagined this project would help me in this way :p)* the `printf()` function has an option for `padding` and that's what we're  gonna use here to generate those extra `16930112` characters *(Yeah I'm not kidding)*, let's start to find the __offset__ for our __address__
 ```
 ~$ echo "AAAA %x %x %x %x %x %x" | ./level4
 AAAA b7ff26b0 bffff744 b7fd0ff4 0 0 bffff708
