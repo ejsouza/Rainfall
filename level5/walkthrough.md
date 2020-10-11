@@ -87,3 +87,27 @@ Disassembly of section .plt:
 ```
 One of these jump instructions is associated with the `exit()` function, which is called at the end of the `n()` function to exit the prgram. If the `jmp` 
 instruction used for the `exit()` function can be manipulated to direct the execution flow int `o()` function we can get it to execute the `system()` function.
+The problem here is that the *procedure linking table* is read only:
+```diff
+level5@RainFall:~$ objdump -h level5 | grep -A1 "\ .plt\ "
+ 11 .plt         00000080  08048370  08048370  00000370  2**4
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+```
+But closer examination of the `jmp` instructions reveals that they aren't jumping to __addresses__ but to pointers to addresses. For example the `exit()` function is stored as a pointer at the memory __address__ `0x8049838`. <br> These __addresses__ exist in another section, called the __*global offset table (GOT)*__ which is writable. These __addresses__ can be directly obtained by displaying the dynamic relocation entries for the binary bu using `objdump`
+```
+~$ objdump -R level5
+
+level5:     file format elf32-i386
+
+DYNAMIC RELOCATION RECORDS
+OFFSET   TYPE              VALUE
+08049814 R_386_GLOB_DAT    __gmon_start__
+08049848 R_386_COPY        stdin
+08049824 R_386_JUMP_SLOT   printf
+08049828 R_386_JUMP_SLOT   _exit
+0804982c R_386_JUMP_SLOT   fgets
+08049830 R_386_JUMP_SLOT   system
+08049834 R_386_JUMP_SLOT   __gmon_start__
+08049838 R_386_JUMP_SLOT   exit
+0804983c R_386_JUMP_SLOT   __libc_start_main
+```
