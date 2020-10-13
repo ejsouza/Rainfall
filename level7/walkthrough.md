@@ -50,4 +50,17 @@ Many of those functions are from main because the `m()` functions is a relly sho
 0x0804851f <+43>:	leave
 0x08048520 <+44>:	ret
 ```
-Disassembling `main()` we see four calls to `malloc()`, two calls to `strcpy()` *(we know `strpcy()` is vulnerable)*, one call to `fopen()`, one call to `fgets()` and one last call to `puts()`. <br> Every call to `malloc()` is made with an `0x8 bytes`.<br> Both `strcpy()` are taking the arguments as it's seconde parameter `strcpy(*dst, argv[1]) - strcpy(*dst, argv[2])` *(that is the reason it will crash if less than two parameters is passed)* 
+Disassembling `main()` we see four calls to `malloc()`, two calls to `strcpy()` *(we know `strpcy()` is vulnerable)*, one call to `fopen()`, one call to `fgets()` and one last call to `puts()`. <br> Every call to `malloc()` is made with an `0x8 bytes`.<br> Both `strcpy()` are taking the arguments as it's seconde parameter `strcpy(*dst, argv[1]) - strcpy(*dst, argv[2])` *(that is the reason it will crash if less than two parameters is passed)*
+```
+(gdb) r AAA BBB
+b *0x080485a0
+b *0x080485bd
+(gdb) r
+Breakpoint 1, 0x080485a0 in main ()
+x/s $edx
+0xbffff8c3:	 "AAA"
+(gdb) r
+Breakpoint 2, 0x080485bd in main ()
+x/s $edx
+0xbffff8c7:	 "BBB"
+```
