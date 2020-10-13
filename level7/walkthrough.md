@@ -50,4 +50,4 @@ Many of those functions are from main because the `m()` functions is a relly sho
 0x0804851f <+43>:	leave
 0x08048520 <+44>:	ret
 ```
-Disassembling `main()` we see four calls to `malloc()`, two calls to `strcpy()` *(we know `strpcy()` is vulnerable)*, one call to `fopen()`, one call to `fgets()` and one last call to `puts()`.
+Disassembling `main()` we see four calls to `malloc()`, two calls to `strcpy()` *(we know `strpcy()` is vulnerable)*, one call to `fopen()`, one call to `fgets()` and one last call to `puts()`. <br> Every call to `malloc()` is made with an `0x8 bytes` 
