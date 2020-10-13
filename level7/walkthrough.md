@@ -2,6 +2,8 @@
 
 The `level7` expects at least two arguments otherwise it will crash. There are two functions, `main()` and `m()` and `m()` is naver called from `main()` we can see it using:
 ```
+(gdb) info functions
+
 Non-debugging symbols:
 0x0804836c  _init
 0x080483b0  printf
@@ -48,3 +50,4 @@ Many of those functions are from main because the `m()` functions is a relly sho
 0x0804851f <+43>:	leave
 0x08048520 <+44>:	ret
 ```
+Disassembling `main()` we see four calls to `malloc()`, two calls to `strcpy()` *(we know `strpcy()` is vulnerable)*, one call to `fopen()`, one call to `fgets()` and one last call to `puts()`.
