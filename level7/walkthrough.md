@@ -65,4 +65,4 @@ x/s $edx
 0xbffff8c7:	 "BBB"
 ```
 
-We can overflow the first `strcpy(*dest, 20 * 'A' + 08049928)` that will overwrite the  __address__ *(first argument passed to `strcpy(*dest <--, *src)`)* of the second `strcpy()` and if we place the __address__ of the `GOT` *(yes the same strategy as in `level5`)* of the function  `puts()` and we replace it with the __address__ of function `m()` this function will execute and we will get our flag.
+We can use the first `strcpy(*dest, 20 * 'A' + 08049928)` to overflow  and overwrite the  __address__ *(first argument passed to the second `strcpy(*dest <--, *src)`)* and if we place the __address__ of the `GOT` *(yes the same strategy as in `level5`)* of the function  `puts()` and we place  the __address__ of function `m()` to be passed as argument to the second `strcpy()` this function will execute and we will get our flag.
