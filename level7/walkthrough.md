@@ -64,3 +64,5 @@ Breakpoint 2, 0x080485bd in main ()
 x/s $edx
 0xbffff8c7:	 "BBB"
 ```
+
+We can overflow the first `strcpy(*dest, 20 * 'A' + 08049928)` that will overwrite the  __address__ *(first argument passed to `strcpy(*dest <--, *src)`)* of the second `strcpy()` and if we place the __address__ of the `GOT` *(yes the same strategy as in `level5`)* of the function  `puts()` and we replace it with the __address__ of function `m()` this function will execute and we will get our flag.
