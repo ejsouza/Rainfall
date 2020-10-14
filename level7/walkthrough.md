@@ -65,4 +65,10 @@ x/s $edx
 0xbffff8c7:	 "BBB"
 ```
 
-We can use the first `strcpy(*dest, 20 * 'A' + 08049928)` to overflow  and overwrite the  __address__ *(first argument passed to the second `strcpy(*dest <--, *src)`)* and if we place the __address__ of the `GOT` *(yes the same strategy as in `level5`)* of the function  `puts()` and we place  the __address__ of function `m()` to be passed as argument to the second `strcpy()` this function will execute and we will get our flag.
+We can use the first `strcpy(*dest, 20 * 'A' + 08049928)` to overflow  and overwrite the  __address__ *(first argument passed to the second `strcpy(*dest <--, *src)`)* and if we place the __address__ of the `GOT` *(yes the same strategy as in `level5`)* of the function  `puts()` and we place  the __address__ of function `m()` to be passed as argument to the second `strcpy()` this function will execute and we will get our flag.<br>
+In the `main()` as already said there will be 4 `malloc()` and the `strcpy()` will copy what we entered as first argument to the first __address__ return by `malloc()` and the second argument will be copied to the last __address__ returned by `malloc()` there are also a call to `fopen()` right after the last `strcpy()` and if we examine one __address__ just before the call we see what the function is trying to open <br>
+```
+ 0x080485c7 <+166>:	mov    eax,0x80486eb
+(gdb) x/s 0x80486eb
+0x80486eb:	 "/home/user/level8/.pass"
+```
