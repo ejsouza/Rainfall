@@ -26,3 +26,29 @@ After some search  I could find this [SO-POST](https://stackoverflow.com/questio
 (gdb) x/s 0x804881f
 0x804881f:	 "reset"
 ```
+And the next
+```
+   0x0804867e <+282>:	mov    eax,0x8048825
+   0x08048683 <+287>:	mov    ecx,0x6
+   0x08048688 <+292>:	mov    esi,edx
+   0x0804868a <+294>:	mov    edi,eax
+   0x0804868c <+296>:	repz cmps BYTE PTR ds:[esi],BYTE PTR es:[edi]
+   0x0804868e <+298>:	seta   dl
+   0x08048691 <+301>:	setb   al
+   
+(gdb) x/s 0x8048825
+0x8048825:	 "service
+```
+And the last one
+```
+   0x080486bb <+343>:	mov    eax,0x804882d
+   0x080486c0 <+348>:	mov    ecx,0x5
+   0x080486c5 <+353>:	mov    esi,edx
+   0x080486c7 <+355>:	mov    edi,eax
+   0x080486c9 <+357>:	repz cmps BYTE PTR ds:[esi],BYTE PTR es:[edi]
+   0x080486cb <+359>:	seta   dl
+   0x080486ce <+362>:	setb   al
+   
+(gdb) x/s 0x804882d
+0x804882d:	 "login"
+```
