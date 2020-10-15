@@ -37,7 +37,7 @@ And the next
    0x08048691 <+301>:	setb   al
    
 (gdb) x/s 0x8048825
-0x8048825:	 "service
+0x8048825:	 "service"
 ```
 And the last one
 ```
