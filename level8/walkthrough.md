@@ -75,3 +75,28 @@ service
 login
 $
 ```
+At the beginig of the program we can see a call to `malloc()` and the __address__:
+```
+ 0x080485eb <+135>:	call   0x8048470 <malloc@plt>
+ 0x080485f0 <+140>:	mov    ds:0x8049aac,eax
+```
+This __address__ `0x8049aac` will be shared by *`auth `* and *`service`* then at the end of the program just before the `system()` call we will see this __address__ again
+```
+=> 0x080486e2 <+382>:	mov    eax,ds:0x8049aac
+   0x080486e7 <+387>:	mov    eax,DWORD PTR [eax+0x20]
+   0x080486ea <+390>:	test   eax,eax
+   0x080486ec <+392>:	je     0x80486ff <main+411>
+   0x080486ee <+394>:	mov    DWORD PTR [esp],0x8048833
+   0x080486f5 <+401>:	call   0x8048480 <system@plt>
+```
+and if we check this address we will recognize it from the command line:
+```
+(gdb) x/4xw 0x8049aac
+0x8049aac <auth>:	0x0804a008	0x0804a028	0x00000000	0x00000000
+```
+We can see that is this address that we are writing to when we enter ``` `auth ` ``` and `service` as the arguments to the program, we can see from the snippet above that the prgram is loading this __address__ to the register `eax` and then adding `0x20` to it:
+|Address| | |
+|-------|----|-----|
+|0x8049aac| =| 0x0804a008|
+|0x0804a008|+| 0x20|
+|0x0804a028 |
