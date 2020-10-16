@@ -96,7 +96,8 @@ and if we check this address we will recognize it from the command line:
 ```
 We can see that is this address that we are writing to when we enter ``` `auth ` ``` and `service` as the arguments to the program, we can see from the snippet above that the prgram is loading this __address__ to the register `eax` and then adding `0x20` to it:
 
-|Address|
+|Address|||
+|---|---|---|
 |0x8049aac| =| 0x0804a008|
 |0x0804a008|+| 0x20|
-|0x0804a028|
+|0x0804a028|||
