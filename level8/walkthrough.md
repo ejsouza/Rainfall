@@ -68,15 +68,10 @@ $
 ``` 
 or we can enter
 ```
-~$ ./level8
-(nil), (nil)
-`auth `
-0x804a008, (nil)
 service
 0x804a008, 0x804a018
 service
 0x804a008, 0x804a028
 login
 $
-
 ```
