@@ -11,7 +11,7 @@ Righ after this I was faced with some *assembly code* that looks very weird to m
 0x080485d1 <+109>:	seta   dl
 0x080485d4 <+112>:	setb   al
 ```
-After some search  I could find this [SO-POST](https://stackoverflow.com/questions/44630262/what-do-the-assembly-instructions-seta-and-setb-do-after-repz-cmpsb/44630741) that could clarify some parts and made me understand that it was comparing a string character by charater,<br> *why bother? why not just call `strcmp`?* maybe to try to make it more complicated ? and there are also a bunch of *flags* being set in this way of doing the comparasion.<br> The next string we will find in the dissableded code comes after we jumb as our argument wasn't correct.
+After some search  I could find this [SO-POST](https://stackoverflow.com/questions/44630262/what-do-the-assembly-instructions-seta-and-setb-do-after-repz-cmpsb/44630741) that could clarify some parts and made me understand that it was comparing a string character by charater,<br> *why bother? why not just call `strcmp`?* maybe to try to make it more complicated ? and there are also a bunch of *flags* being set in this way of doing the comparasion.<br> The next string we will find in the dissableded code:
 ```
 => 0x08048642 <+222>:	lea    eax,[esp+0x20]
    0x08048646 <+226>:	mov    edx,eax
