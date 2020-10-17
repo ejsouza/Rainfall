@@ -44,4 +44,23 @@ with an
 0x0804874e  N::operator-(N&)
 [...]
 ```
-We can see the class is composed with a *__constructor__* and three methods <br> *__setAnnotation(char \*)__*, *__operator+(N&))__* and *__operator-(N&)__* 
+We can see the class is composed with a *__constructor__* *(constructor has same name as Class)* and three methods <br> *__setAnnotation(char \*)__*, *__operator+(N&))__* and *__operator-(N&)__* <br>
+We we disassembly the *setAnnotation()* function we will find some interesting things *(a call to memcpy() which we can use to overflow the heap)*
+```
+(gdb) disas _ZN1N13setAnnotationEPc
+   0x0804870e <+0>:	push   ebp
+   0x0804870f <+1>:	mov    ebp,esp
+   0x08048711 <+3>:	sub    esp,0x18
+   0x08048714 <+6>:	mov    eax,DWORD PTR [ebp+0xc]
+   0x08048717 <+9>:	mov    DWORD PTR [esp],eax
+   0x0804871a <+12>:	call   0x8048520 <strlen@plt>
+   0x0804871f <+17>:	mov    edx,DWORD PTR [ebp+0x8]
+   0x08048722 <+20>:	add    edx,0x4
+   0x08048725 <+23>:	mov    DWORD PTR [esp+0x8],eax
+   0x08048729 <+27>:	mov    eax,DWORD PTR [ebp+0xc]
+   0x0804872c <+30>:	mov    DWORD PTR [esp+0x4],eax
+   0x08048730 <+34>:	mov    DWORD PTR [esp],edx
+   0x08048733 <+37>:	call   0x8048510 <memcpy@plt>
+   0x08048738 <+42>:	leave
+   0x08048739 <+43>:	ret
+```
