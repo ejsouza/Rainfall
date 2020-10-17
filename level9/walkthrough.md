@@ -19,4 +19,29 @@ Dump of assembler code for function main:
 ~$ c++filt _Znwj
 operator new(unsigned int)
 ```
-So we suspect there's a Class being created with the operator *new*
+So we suspect there's a Class being created with the operator *new* and this class looks like to have a constructor
+```
+0x080486f6 in N::N(int) ()
+Dump of assembler code for function _ZN1NC2Ei:
+   0x080486f6 <+0>:	push   ebp
+=> 0x080486f7 <+1>:	mov    ebp,esp
+   0x080486f9 <+3>:	mov    eax,DWORD PTR [ebp+0x8]
+   0x080486fc <+6>:	mov    DWORD PTR [eax],0x8048848
+   0x08048702 <+12>:	mov    eax,DWORD PTR [ebp+0x8]
+   0x08048705 <+15>:	mov    edx,DWORD PTR [ebp+0xc]
+   0x08048708 <+18>:	mov    DWORD PTR [eax+0x68],edx
+   0x0804870b <+21>:	pop    ebp
+   0x0804870c <+22>:	ret
+```
+with an
+```
+(gdb) info functions
+[...]
+0x080486f6  N::N(int)
+0x080486f6  N::N(int)
+0x0804870e  N::setAnnotation(char*)
+0x0804873a  N::operator+(N&)
+0x0804874e  N::operator-(N&)
+[...]
+```
+We can see the class is composed with a *__constructor__* and three methods <br> *__setAnnotation(char \*)__*, *__operator+(N&))__* and *__operator-(N&)__* 
