@@ -96,4 +96,10 @@ fs             0x0	0
 gs             0x33	51
 
 ```
-As we can see after passing 110 characters we overwrote by two bytes `ecx` what gives us an **__offset_** of `108` 
+As we can see after passing 110 characters we overwrote by two bytes `ecx` what gives us an **__offset_** of `108`
+We can also see in the `main()` that the two call to `new()` returns the two __address__ 
+```
+0x804a008 = first  new()
+0x804a078 = second new()
+```
+That is exactly `0x70 bytes (112)`  from each other what is probably the `malloc(sizeof(M))`
