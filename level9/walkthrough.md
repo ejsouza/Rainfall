@@ -102,4 +102,8 @@ We can also see in the `main()` that the two call to `new()` returns the two __a
 0x804a008 = first  new()
 0x804a078 = second new()
 ```
-That is exactly `0x70 bytes (112)`  from each other what is probably the `malloc(sizeof(M))`
+That is exactly `0x70 bytes (112)`  from each other what is probably the `malloc(sizeof(M))` we can also see that before each call a value of `0x6c bytes (108)` is passed
+```
+0x08048610 <+28>:	mov    DWORD PTR [esp],0x6c
+0x08048617 <+35>:	call   0x8048530 <_Znwj@plt>
+```  
