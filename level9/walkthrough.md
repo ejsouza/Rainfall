@@ -106,4 +106,25 @@ That is exactly `0x70 bytes (112)`  from each other what is probably the `malloc
 ```
 0x08048610 <+28>:	mov    DWORD PTR [esp],0x6c
 0x08048617 <+35>:	call   0x8048530 <_Znwj@plt>
-```  
+``` 
+We can also verify that we are calling the __address__ of the *first new()*` to  *setAnnotation()* with the string we supplied the program 
+```
+   0x08048674 <+128>:	mov    DWORD PTR [esp],eax
+=> 0x08048677 <+131>:	call   0x804870e <_ZN1N13setAnnotationEPc>
+   0x0804867c <+136>:	mov    eax,DWORD PTR [esp+0x10]
+   
+(gdb) x/4xw $esp
+0xbffff6b0:	0x0804a008	0xbffff8c5	0xbffff780	0xb7d79e55
+(gdb) x/s 0xbffff8c5
+0xbffff8c5:	 "hello"
+```
+After that in `main()` we see a call to `edx` that contains the __address__ of the *second new()* `0x804a078` let put a break and check
+```
+(gdb) b *0x08048690
+Breakpoint 2 at 0x8048690
+n
+=> 0x08048690 <+156>:	mov    DWORD PTR [esp],eax
+   0x08048693 <+159>:	call   edx
+(gdb) x/4xw $eax
+0x804a078:	0x08048848	0x00000000	0x00000000	0x00000000
+```
