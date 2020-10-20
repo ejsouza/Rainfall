@@ -128,3 +128,4 @@ n
 (gdb) x/4xw $eax
 0x804a078:	0x08048848	0x00000000	0x00000000	0x00000000
 ```
+We now have enough information to try to get the flag, as we don't have any call to `system()` function here we will need to pass a *shellcode* as in `level2`
