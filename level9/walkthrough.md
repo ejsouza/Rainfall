@@ -140,10 +140,10 @@ Dump of assembler code for function _ZN1N13setAnnotationEPc:
    0x0804871a <+12>:	call   0x8048520 <strlen@plt>
    0x0804871f <+17>:	mov    edx,DWORD PTR [ebp+0x8]
    0x08048722 <+20>:	add    edx,0x4
-   0x08048725 <+23>:	mov    DWORD PTR [esp+0x8],eax
-=> 0x08048729 <+27>:	mov    eax,DWORD PTR [ebp+0xc]
+   0x08048725 <+23>:	mov    DWORD PTR [esp+0x8],eax      <---------------- contain the return from strlen()
+=> 0x08048729 <+27>:	mov    eax,DWORD PTR [ebp+0xc]      <---------------- the address where our string was stored when passed to the prgram
    0x0804872c <+30>:	mov    DWORD PTR [esp+0x4],eax
-   0x08048730 <+34>:	mov    DWORD PTR [esp],edx
+   0x08048730 <+34>:	mov    DWORD PTR [esp],edx          <---------------- the address to copy the string (the address of the first call to new)
    0x08048733 <+37>:	call   0x8048510 <memcpy@plt>
    0x08048738 <+42>:	leave
    0x08048739 <+43>:	ret
