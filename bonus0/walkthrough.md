@@ -1,12 +1,27 @@
 ## bonus0
-In `bonus0` we will find three functions`p() pp() main()`
+In `bonus0` we will find three functions`p() pp() main()`<br>
+The `main()` will set the stack to `sub    esp,0x40` and will create a *__buffer[42]__* `( eax,[esp+0x16])` and after that `main()` will call a function called `pp(buffer)` and will pass this *buffer[42]* as parameter.<br>
+The function `pp()` will create two buffers also that we will call *str1 & str2*
+```
+0x0804852e <+16>:	lea    eax,[ebp-0x30]
+0x08048541 <+35>:	lea    eax,[ebp-0x1c]
+```
+Pay special attention to the gap between those two __addresses__
+
+|0x30 - 0x1c = 0x14|
+|-|
+|Those `0x14 (20) bytes` is where the exploit will be made|
+
+Following there will be two call to a funtion called `p()`, this function takes in two parameters `p(param1, param2)` the first parameter will will be the *str1* in the first call and *str2* on the second call, and the second parameter in both calls will be the string <br> `" - "`
+
+|p(str1, " - ")|
+|-|
+|p(str2, " - ")|
+
+The function `p()` will call `puts()` on her second argument and define a buffer of 4096 <br> ` 0x080484c8 <+20>:	mov    DWORD PTR [esp+0x8],0x1000` <br>
+again pay attention here because in this buffer we will have to store our *shellcode*
 
 
-
-
-
-
--------------------------------------------------------------
 After some tests we find our *offset* as a value of `9`
 ```
 -
