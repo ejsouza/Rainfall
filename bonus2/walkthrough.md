@@ -9,4 +9,5 @@ the strings doesn't match the second call to `memcmp()` will be made this time w
 if none of the cases are true the *global* variable as a default value of `0x0`. <br>
 Next a call to the function `greetuser(buffer[0x50])` will be made.<br>
 The function `greetuser()` also reserves spaces for a *greetbuffer[0x48]* and then the function will precede to check the value of the *global* variable
-` 0x0804848a <+6>:	mov    eax,ds:0x8049988` against `0x2, 0x1, 0x0` depending on the result the function will `strncpy()` a *greeting* message to the *greebuffer[0x48]* with the *LANG* that is set *(remember this, it will come in handy later)* .
+` 0x0804848a <+6>:	mov    eax,ds:0x8049988` against `0x2, 0x1, 0x0` depending on the result the function will `strncpy()` a *greeting* message to the *greetbuffer[0x48]* with the *LANG* that is set *(remember this, it will come in handy later)*.
+Right after that the parameters we suplied to the program will be concatenated to the *greetbuffer[0x48]* `=> 0x0804850a <+134>:	lea    eax,[ebp+0x8]`
