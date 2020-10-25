@@ -2,25 +2,25 @@
 The `bonus1` will crash without arguments, so we disassebled the main to see that the program expects two arguments, the first argument will be passed to `atoi(argv[1])`
 and the second one to `memcpy()` but before getting there we have some tests to pass, and if we can pass the tests a function for executing the shell will be called.
 The first test will be if the number we provide as argument is less or equal to 0x9 <br>`0x08048441 <+29>:	cmp    DWORD PTR [esp+0x3c],0x9`<br> and this number will be store right after a `buffer[40]` <br>` 0x0804843d <+25>:	mov    DWORD PTR [esp+0x3c],eax` <br>
-Next our second parameter will be copied to the *buffer[40]* using the `memcpy()` function, we know this function has no checks, and we will be using it for our exploit. The size passed to `memcpy()` is our first parameter multiplied by 4 and right after the call to `memcpy()` there's a comparison if the number we passed as first argument and a huge number, if they are equal we get the shell, other the program jumps to the end. <br>
+Next our second parameter will be copied to the *buffer[40]* using the `memcpy()` function, we know this function has no checks, and we will be using it for our exploit. The size passed to `memcpy()` is our first parameter multiplied by 4 and right after the call to `memcpy()` there's a comparison if the number we passed as first argument and a huge number, if they are equal we get the shell, otherwise the program jumps to the end. <br>
 `0x08048478 <+84>:	cmp    DWORD PTR [esp+0x3c],0x574f4c46`<br>
-Wait but what's the point? first there's a check for number to be less than 10 and then they want it to be = to *0x574f4c46 (1464814662)* ? what the heck.
-To get around this we will use `memcpy()` to right enough character to change the value of the number and put this huge value in place *0x574f4c46*.<br>
+Wait but what's the point? first there's a check for the number to be less than 10 and then they want it to be equal to *0x574f4c46 (1464814662)* ? what the heck.
+To get around this we will use `memcpy()` to right enough character to change the value of the *number* and put this huge value in place *0x574f4c46*.<br>
 I can hear you: *Hey, smarty pants! How are you gonna do that if `memcpy()` will copy the number you entered times 4 and you cannot enter a number greater than 9 and the number is 40 bytes above* ?
-Me: Hey don't you remember those times working on the *libft* and when you passed a negative number for an unsigned type it will become a huge number, so that's what we are going to do here, let find the *offset* I worte this rudmentary program to help us find a negative number multiplied by 4 that will give what we want
+Me: Hey don't you remember those times working on the *libft* and when you passed a negative number for an unsigned type it will become a huge number, so that's what we are going to do here, lets find the *offset* I worte this rudmentary program to help us on finding a negative number multiplied by 4 that will give what we want
 ```
 #include <stdio.h>
 int			main(void) {
-	unsigned int n = -2147483638;
+	unsigned int n = -2147483637;
 	printf("%u\n", n * 4);
 	return (0);
 }
 
 ./a.out
-40
+44
 ```
-Lets try with 40
-*does work* let's try 44 `-2147483637`
+After starting at *-2147483648* and changing we finally found the one that will return what we want `-2147483637` gives us `44`
+We need 44 because the *number* is 40 bytes above the *buffer[40]* in memory and as we want to overwrite it we add *4* and we get past, so *40 'A' + 0x574f4c46* will be our *argv[2]* and *-2147483637* that will be multiplied by *4* that will become *44* characters to be copied into the *buffer[40]* and we overwirte the *number*
 ```
 (gdb) r -2147483637 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
