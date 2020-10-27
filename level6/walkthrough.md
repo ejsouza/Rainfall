@@ -37,7 +37,7 @@ Dsisassembling `main()` we can see two call to `malloc()`
 0x0804849c <+32>:	call   0x8048350 <malloc@plt>
 ```
 We know from the disassembled code that those `0x40 (64) bytes` will be the buffer where `strcpy()` will copy the argument we passed at the start of the prgram and
-the `x04` will be used to store the __address__ of the function `m()` in the *heap* that the only purpose in life *(yes functions now have a life :p)* is to print __*Nope*__ and
+the `x04` will be used to store the __address__ of the function `m()` in the *heap* that's the only purpose in life *(yes functions now have a life :p)* is to print __*Nope*__ and
 as you may guess by now, our only purpose in life *(does hackers have a life ?)* is to write enough garbage in the buffer passed to `strcpy()` and put the __address__
 with the `n()` function that contains the `system()` call into those `0x4 bytes` *heap* __address__ .
 <br> Let's go back to our friendly website [buffer-overflow-generator](https://wiremask.eu/tools/buffer-overflow-pattern-generator/) and grab the 200 characters long poison,
@@ -47,7 +47,7 @@ next let's fire up `GDB` and see what we can do: <br>
 Program received signal SIGSEGV, Segmentation fault.
 0x41346341 in ?? ()
 ```
-Writing a buffer large enough we can go outside the boundary of the `64 bytes` __address__ and overwirte the pinter in the *heap* to the `m()` function with the 
+Writing a buffer large enough we can go outside the boundary of the `64 bytes` __address__ and overwirte the pointer in the *heap* to the `m()` function with the 
 `n()` function __address__.<br>
 If we go back to *buffer-overflow-generator* and paste this __address__ *(0x41346341)* in *Find the offset*  we get our **offset** `72`<br> find the `n()` function __address__
 ```
