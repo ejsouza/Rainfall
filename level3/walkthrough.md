@@ -51,10 +51,10 @@ Here we can see our string `AAAA` is being placed in the stack in the 4th place,
 We will replace the *format string specifier* from `%x` to `%n` as what we are trying to do is set the __address__ value to *64* and as said above the `%n` can be used to write data to an __address__. <br> We will aslo be using the __Direct Parameter Access__ `($)` with *4* because as checked in our tests the `printf()` was placing it in the 4th position so the `%x` will become `%4$n` what means, write the number of bytes printed so for in the 4th position in the stack.<br>
 *(Since this is being done on the command line and the dollar sign is a special charater, it must be scaped with a backslash)* <br>
 So what we need is to create a string of *64 bytes (the number what will be checked in the v() function)* with the __address__ to write to *(that's is 4 bytes long)* plus *60 bytes* plus the *format string specifier* and that gives us: <br>
-`(puthon -c "print(\x8c\x98\x04\x08) + 60 * 'A' + '%4\$n'")` <br>
+`(python -c "print(\x8c\x98\x04\x08) + 60 * 'A' + '%4\$n'")` <br>
 Now just add the `cat` command with the `-` option to keep the standard entry open and get access to the shell <br>
 ```
-(python -c "print('\x8c\x98\x04\x08' + 60 * 'A' + '%4\$n')"; cat -) | ./level3
+(python -c "print('\x8c\x98\x04\x08' + 60 * 'A' + '%4\$n')"; cat) | ./level3
 
 �AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 Wait what?!
