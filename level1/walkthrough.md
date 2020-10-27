@@ -2,7 +2,7 @@ The executable found in level1 once runned waits for some input, once we pass it
 any random input less than 76 bytes long the program just returns.
 Disassebling the code we set a brak point in main() and we can see that the ESP is set by
 sub 	ESP, 0X50 ; this make a total of 80 bytes, next we see LEA (load effective address)
-to EAX[ESP+0X10] if we add this to stack  pointer we get 80-16 what gives us 64, so we  know
+to `EAX[ESP+0X10]` if we add this to stack  pointer we get 80-16 what gives us 64, so we  know
 this is the address for the gets() function that comes after setting this address.
 Unfortunately we can not use nm here to check for more details, but we still can use
 objdump -d(display assembler mnemonics for the machine instructions) level1 and it will
@@ -23,7 +23,7 @@ run() function <0x08048444>
 We need to overflow the stack filling it with any sort character we want, and just before the
 return address in main we should fill it with the address of the run() function.
 (Bear in mind that 0x86 has little-endian architecture, remember 'little end first' so the address 0x08048444 becomes 0x44840408 ) 
-We can go to https://wiremask.eu/tools/buffer-overflow-pattern-generator/ to find the offset
+We can go to [buffer-overflow-generator](https://wiremask.eu/tools/buffer-overflow-pattern-generator/) to find the offset
 past the code generated from this website once running level1 then copy the address return with the segfault
 return to the website and get the of 76
 
